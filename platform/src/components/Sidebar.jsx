@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutGrid, Layers, Library, TerminalSquare, ClipboardList, Bot, Settings, ArrowUpRight, Trophy } from 'lucide-react';
+import { LayoutGrid, Layers, Library, TerminalSquare, ClipboardList, Bot, Settings, ArrowUpRight, Trophy, Award } from 'lucide-react';
 import { Robot } from './Art.jsx';
 
 const NAV = [
@@ -9,6 +9,7 @@ const NAV = [
   { to: '/labs', label: 'Live Labs', icon: TerminalSquare },
   { to: '/assignments', label: 'Assignments', icon: ClipboardList },
   { to: '/achievements', label: 'Achievements', icon: Trophy },
+  { to: '/certificate', label: 'Certificate', icon: Award },
   { to: '/tutor', label: 'AI Tutor', icon: Bot },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];

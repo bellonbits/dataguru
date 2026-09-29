@@ -268,3 +268,30 @@ table.sheet td.err input { color: var(--bad); } table.sheet td.target { backgrou
 .auth-foot { margin-top: 22px; text-align: center; color: var(--muted); } .auth-note { font-size: 13px; text-align: center; margin: 12px 0 0; }
 .recovery { display: flex; align-items: center; gap: 14px; background: linear-gradient(160deg, var(--lime), #eaf9a6); color: var(--lime-ink); padding: 20px 22px; border-radius: 20px; margin: 4px 0 14px; } .recovery code { font: 600 clamp(20px, 3.2vw, 26px) var(--mono); letter-spacing: .12em; }
 @media (max-width: 900px) { .auth { grid-template-columns: 1fr; padding: 0; gap: 0; } .auth-hero { display: none; } .auth-main { border-radius: 0; } .auth-brand-sm { display: flex !important; } }
+
+/* ---- Certificate ---- */
+.cert-status { margin-bottom: 18px; }
+.cert-stage { position: relative; } .cert-stage.locked .cert { filter: grayscale(.6) opacity(.75); }
+.cert { position: relative; width: 100%; aspect-ratio: 1684 / 1202; container-type: inline-size; background: #fff; box-shadow: 0 10px 40px rgba(0,0,0,.18); border-radius: 6px; overflow: hidden; font-family: 'Montserrat', sans-serif; color: #141a3c; }
+.cert-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cert-body { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 17.5cqw 0 0; text-align: center; }
+.cert-body > * { position: relative; }
+.cert-title { font-size: 4.5cqw; letter-spacing: .12em; font-weight: 500; line-height: 1; margin-top: -8.2cqw; }
+.cert-sub { font-size: 1.75cqw; letter-spacing: .2em; font-weight: 500; margin-top: 1cqw; }
+.cert-gem { width: 1.6cqw; height: 1.6cqw; margin-top: 2.4cqw; background: linear-gradient(135deg, #2f2b7c 50%, #5aa383 50%); }
+.cert-pre { font-size: 1.15cqw; letter-spacing: .22em; font-weight: 600; margin-top: 7cqw; color: #2b2f55; }
+.cert-name { margin-top: 2.2cqw; max-width: 68cqw; } .cert-name span { display: inline-block; font-size: 3.3cqw; font-weight: 800; letter-spacing: .22em; padding: 0 .6cqw .9cqw; border-bottom: .35cqw solid #5aa383; white-space: nowrap; }
+.cert-text { width: 56cqw; font-size: 1.15cqw; line-height: 1.5; letter-spacing: .04em; color: #6b6f88; margin: 2.6cqw 0 0; }
+.cert-sign { position: absolute; left: 18%; right: 18%; bottom: 10.5%; display: flex; justify-content: space-between; align-items: flex-end; }
+.cert-sign > div { display: flex; flex-direction: column; align-items: center; min-width: 22cqw; }
+.cert-sign b { font-size: 1.2cqw; letter-spacing: .1em; padding: .5cqw 1.6cqw .4cqw; border-top: .1cqw dashed #444; }
+.cert-sign span { font-size: 1.1cqw; letter-spacing: .04em; margin-top: .3cqw; } .cert-sign em { font-style: normal; font-size: .85cqw; letter-spacing: .12em; color: #8a8ea6; margin-top: .6cqw; }
+.cert-sig { font-family: 'Mrs Saint Delafield', cursive; font-size: 5.2cqw; line-height: .9; color: #1b1f4a; margin-bottom: .6cqw; }
+.cert-meta b { border-top: .1cqw dashed #444; }
+.cert-watermark { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15cqw; font-weight: 800; letter-spacing: .1em; color: rgba(20,26,60,.1); transform: rotate(-18deg); pointer-events: none; }
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  body * { visibility: hidden; } .no-print { display: none !important; }
+  #certificate, #certificate * { visibility: visible; }
+  #certificate { position: fixed; inset: 0; width: 100vw; height: 100vh; aspect-ratio: auto; box-shadow: none; border-radius: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

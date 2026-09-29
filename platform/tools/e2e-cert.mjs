@@ -1,0 +1,23 @@
+import { launch } from './shot.mjs';
+const BASE = process.env.BASE || 'http://localhost:5174/';
+let bad = 0; const ok = (c, n) => { console.log(c ? 'ok  ' : 'FAIL', n); if (!c) bad++; };
+const b = await launch(); const p = await b.newPage({ viewport: { width: 1600, height: 1000 } });
+const errs = []; p.on('pageerror', e => errs.push(e.message));
+await p.goto(BASE + '#/'); await p.getByRole('button', { name: /Continue as guest/ }).click(); await p.waitForTimeout(300);
+await p.goto(BASE + '#/certificate'); await p.waitForSelector('.cert');
+ok(!!(await p.$('.cert-watermark')), 'locked: PREVIEW watermark shown');
+ok(await p.getByText('Print / save as PDF').count() === 0, 'locked: no print button');
+ok(await p.getByText('Lessons completed').count() > 0, 'locked: shows what is left');
+await p.screenshot({ path: '/tmp/cert-locked.png' });
+// mark every lesson and lab complete, exactly as the app stores it
+const seed = await p.evaluate(async () => { const { ALL_CHAPTERS, ALL_LABS } = await import('/src/content/courses.js'); return { chapters: Object.fromEntries(ALL_CHAPTERS.map(c => [c.key, Date.now()])), labs: Object.fromEntries(ALL_LABS.map(l => [l.key, Date.now()])) }; });
+await p.evaluate(s => { const k = 'dataguru.v2.guest'; const cur = JSON.parse(localStorage.getItem(k) || '{}'); localStorage.setItem(k, JSON.stringify({ ...cur, ...s })); }, seed);
+await p.reload(); await p.waitForSelector('.cert');
+ok(!(await p.$('.cert-watermark')), 'earned: watermark gone');
+ok(await p.getByText('Print / save as PDF').count() === 1, 'earned: print button');
+await p.locator('#cn').fill('Peter Test'); ok((await p.locator('.cert-name').innerText()).replace(/[\s ]/g, '') === 'PETERTEST', 'name is editable and shown');
+ok((await p.locator('.cert').innerText()).includes('PETER GATITU MWANGI') && (await p.locator('.cert').innerText()).includes('CHIEF TRAINER'), 'signed by Peter Gatitu Mwangi, Chief Trainer');
+await p.locator('#cn').fill('Salisse Torrison');
+await p.locator('.cert').screenshot({ path: '/tmp/cert-earned.png' });
+await p.emulateMedia({ media: 'print' }); await p.pdf({ path: '/tmp/cert.pdf', landscape: true, preferCSSPageSize: true, printBackground: true });
+await b.close(); console.log(errs.length ? errs : 'no page errors'); process.exit(bad ? 1 : 0);

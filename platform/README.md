@@ -30,6 +30,7 @@ These are **device-local accounts**: there is no server. Passwords are salted an
 | Live Labs | SQL, Python, Excel and DAX sandboxes and timed challenges |
 | Assignments | Every auto-graded exercise and its status |
 | Achievements | Badges (computed from real activity), stats, study heat map |
+| Certificate | Unlocks when every lesson and lab is complete: printable Certificate of Achievement signed by the chief trainer (Save as PDF) |
 | AI Tutor | Offline answers from the notes, or Claude (bring your own API key in Settings) |
 | Settings | Name, theme, weekly goal, export / import / reset progress |
 

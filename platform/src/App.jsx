@@ -10,6 +10,7 @@ import Library from './pages/Library.jsx';
 import LiveLabs from './pages/LiveLabs.jsx';
 import Assignments from './pages/Assignments.jsx';
 import Achievements from './pages/Achievements.jsx';
+import Certificate from './pages/Certificate.jsx';
 import Tutor from './pages/Tutor.jsx';
 import SettingsPage from './pages/Settings.jsx';
 import SearchPage from './pages/Search.jsx';
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/labs" element={<LiveLabs />} />
             <Route path="/assignments" element={<Assignments />} />
             <Route path="/achievements" element={<Achievements />} />
+            <Route path="/certificate" element={<Certificate />} />
             <Route path="/tutor" element={<Tutor />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/search" element={<SearchPage />} />
