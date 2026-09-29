@@ -1,0 +1,322 @@
+{
+ "excel": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "md": "Source: *Data Analysis Made Easy* by Ezekiel Aleke, pp. 1–50. The book shows most formulas as screenshots. The formulas below are reconstructed from the surrounding text."
+  },
+  {
+   "id": "ch1",
+   "title": "1. What is Excel?",
+   "md": "Excel is Microsoft's spreadsheet software for organizing, analyzing and visualizing data.\n\n| Term | Meaning |\n|---|---|\n| Workbook | A file containing one or more worksheets |\n| Worksheet | A single sheet where data is entered and analysed |\n| Cell | One box on a worksheet |\n| Range | Two or more adjacent cells (e.g. `A1:A10`) |\n| Formula | An equation that calculates from cells and returns a result |\n| Function | A predefined formula (SUM, AVERAGE, MAX, MIN…) |\n| Chart | Graphical representation of worksheet data |\n| Pivot table | Summarizes and analyzes large data sets |\n| Conditional formatting | Formats cells automatically based on conditions |\n| Data validation | Restricts what can be entered in a cell |\n| Power Pivot | Data-modelling tool: table relationships, calculated columns, measures |"
+  },
+  {
+   "id": "ch2",
+   "title": "2. Manage data in cells and ranges",
+   "md": "**Sorting** (Home → Sort & Filter)\n- Sort A to Z or Z to A sorts by the first column.\n- Custom Sort lets you sort by several columns or by a specific criterion.\n\n**Filtering** (Data → Filter)\n- Use the drop-down on a column header.\n- Text, number and date filters are available. For example, Date Filters → Between takes a start and an end date.\n\n**Formulas**\n- Start with `=`, e.g. `=A1+B1`.\n- `=AVERAGE(A1:A10)`\n- `=SUMIF(B:B,\"Product A\",C:C)` sums column C where column B is \"Product A\"."
+  },
+  {
+   "id": "ch3",
+   "title": "3. Excel functions",
+   "md": "### Math and statistics\n| Function | Purpose | Example |\n|---|---|---|\n| `SUM` | Adds values. Accepts several ranges. | `=SUM(A1:A5, B1:B5)` |\n| `AVERAGE` | Arithmetic mean | `=AVERAGE(A1:A5)` |\n| `COUNT` | Counts cells containing numbers | `=COUNT(A1:A5)` |\n| `MAX` / `MIN` | Highest / lowest value | `=MAX(A1:A5)` |\n\n### Text\n| Function | Purpose | Example |\n|---|---|---|\n| `CONCATENATE` | Joins text | `=CONCATENATE(A1,\" \",B1)` |\n| `LEFT(text,n)` | First n characters | `=LEFT(A1,5)` |\n| `RIGHT(text,n)` | Last n characters | `=RIGHT(C2,4)` |\n| `LOWER` / `UPPER` / `PROPER` | Change case | `=PROPER(A2)` |\n| `TRIM` | Removes leading and trailing spaces | `=TRIM(A2)` |\n\n### Lookup\n- **`XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found], [match_mode], [search_mode])`**\n  - It is the newer replacement for VLOOKUP.\n  - Example: `=XLOOKUP(\"Product A\",A2:A10,B2:B10)`.\n  - Match modes: 0 is exact (default), -1 is the next smaller item, 1 is the next larger item, 2 is wildcard.\n  - Search modes: 1 searches first to last (default), -1 searches last to first.\n  - The book's own description of the match modes (its \"1: first match / 2: last match\" list) is loose. The list above is the actual behaviour.\n- **`VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])`**\n  - The lookup value must be in the first column of the table.\n  - `FALSE` means exact match. `TRUE` or omitted means approximate.\n  - Example: `=VLOOKUP(\"John Doe\",A2:B10,2,FALSE)`.\n\n### Logical\n- `AND(c1,c2,…)` is TRUE only if all conditions are TRUE. Example: `=AND(B2>80,C2>80,D2>80)`.\n- `OR(c1,c2,…)` is TRUE if any condition is TRUE. Example: `=OR(B2=4,B2=5)`.\n\n### Conditional aggregation\n| Function | Example |\n|---|---|\n| `COUNTIF(range,criteria)` | `=COUNTIF(A1:A10,\">5\")` |\n| `COUNTIFS` | `=COUNTIFS(A1:A10,\">5\",A1:A10,\"<10\")` |\n| `SUMIF` | `=SUMIF(A1:A10,\">5\")` |\n| `SUMIFS(sum_range, range1, crit1, …)` | `=SUMIFS(C:C,B:B,\"apple\",C:C,\">5\")` |\n| `AVERAGEIF` / `AVERAGEIFS` | Same pattern, returns the average |\n| `MINIFS` / `MAXIFS` | Min or max under several criteria, e.g. `=MINIFS(D:D,A:A,\"West\",B:B,\"Product B\",C:C,\">\"&DATE(2022,1,1))` |\n\n### Other\n- `UNIQUE(range)` returns the distinct values and removes duplicates. Combining two ranges is written `=UNIQUE({A2:A9;B2:B9})` in the book.\n- `=LEFT(B2, FIND(\"@\",B2)-1)` extracts the username from an email address."
+  },
+  {
+   "id": "ch4",
+   "title": "4. IF, IFS and SWITCH",
+   "md": "- **`IF(test, value_if_true, value_if_false)`**\n  - Bonus: `=IF(B2>10000, B2*0.05, 0)`.\n  - Nested grades: `=IF(A2>=90,\"A\",IF(A2>=80,\"B\",\"C\"))`.\n- **`IFS(cond1, val1, cond2, val2, …)`** returns the value for the first TRUE condition. It errors if none is true, so end with `TRUE, default`.\n  - Example: `=IFS(A2>=90,\"A\",A2>=80,\"B\",A2>=70,\"C\",TRUE,\"F\")`.\n  - Discount tiers: under $10 gets none, $10–20 gets 5%, over $20 gets 10%.\n- **`SWITCH(expression, value1, result1, …, [default])`** matches an expression against exact values.\n  - Example: `=SWITCH(A2,\"Kenya\",\"Africa\",\"France\",\"Europe\",\"Unknown\")`.\n  - The book's commission example is printed as `=SWITCH(B2<5000, B2*0.01, B2<10000, B2*0.02, B2>=10000, B2*0.03)`. That does not work as written, because SWITCH compares the first argument to each value and here it would compare TRUE/FALSE to a number. The working form is `=SWITCH(TRUE, B2<5000, B2*0.01, B2<10000, B2*0.02, B2*0.03)`, or use `IFS`.\n  - The country example in the book: `=SWITCH(A2,\"USA\",\"North America\",\"China\",\"Asia\",\"South Africa\",\"Africa\",\"Brazil\",\"South America\",\"Australia\",\"Australia\",\"Unknown\")`."
+  },
+  {
+   "id": "ch5",
+   "title": "5. Conditional formatting and data validation",
+   "md": "**Conditional formatting** (Home → Conditional Formatting)\n- Highlight Cells Rules, e.g. Less Than 0 with a red fill.\n- Top/Bottom Rules.\n- Color Scales, e.g. red-yellow-green for a heat map.\n\n**Data validation** (Data → Data Validation)\n- Types: Whole Number, Decimal, List, Date, Custom (a formula).\n- You can also set an input message and an error alert."
+  },
+  {
+   "id": "ch6",
+   "title": "6. Excel tables",
+   "md": "- Create one with Insert → Table, and tick \"My table has headers\".\n- Benefits:\n  - Structured format.\n  - Built-in sorting and filtering.\n  - PivotTable integration.\n  - Automatic formatting.\n  - The table expands automatically when you add rows."
+  },
+  {
+   "id": "ch7",
+   "title": "7. Charts and graphics",
+   "md": "Steps: select data → Insert tab → choose chart → customize (titles, labels, legend, axes, styles).\n\n| Chart | Best for |\n|---|---|\n| Column | Comparing categories |\n| Bar | Comparing categories, especially long labels or many categories |\n| Line | Trends over time |\n| Area | Trends over time, with the area below the line filled |\n| Pie | Percentage breakdown of a whole |\n| Scatter | Relationship between two variables |"
+  },
+  {
+   "id": "ch8",
+   "title": "8. Sparklines and data bars",
+   "md": "- **Sparklines** are tiny charts inside a cell. Insert → Sparklines → Line, then pick the data range.\n- **Data bars** are in-cell bars for relative magnitude. Home → Conditional Formatting → Data Bars."
+  },
+  {
+   "id": "ch9",
+   "title": "9. PivotTables and PivotCharts",
+   "md": "1. Select the data, including headers.\n2. Insert → PivotTable.\n3. Choose the source range and place it on a new or existing worksheet.\n4. Drag fields into the four areas:\n   - **Rows** groups by row.\n   - **Columns** groups by column.\n   - **Values** summarizes.\n   - **Filters** filters the whole table.\n5. Customize the layout, filters and calculation type.\n6. For a PivotChart, click a cell in the PivotTable → Insert → PivotChart, then style it in Chart Design and Format."
+  },
+  {
+   "id": "ch10",
+   "title": "10. What-if analysis",
+   "md": "| Tool | Use |\n|---|---|\n| Goal Seek | Find the input needed to reach a target output |\n| Data Tables | Show results for combinations of two variables, e.g. price × quantity |\n| Scenario Manager | Save and compare sets of inputs |\n| Solver | Optimize under constraints |"
+  },
+  {
+   "id": "ch11",
+   "title": "11. Data cleaning",
+   "md": "- Remove duplicates: Data → Remove Duplicates.\n- Remove blank rows: Find & Select → Go To Special → Blanks → Delete.\n- Fix spelling and unwanted characters with Find & Replace. Leave \"Replace with\" empty to delete a character.\n- Convert text to numbers with Format Cells → Number.\n- Handle missing data: `=IF(ISBLANK(A2),\"Default Value\",A2)`.\n- Standardize with `LOWER`, `UPPER`, `PROPER`, `TRIM` and `SUBSTITUTE`."
+  }
+ ],
+ "powerbi": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "md": "Source: *Data Analysis Made Easy*, pp. 51–112. The book shows its DAX code as screenshots. The formulas below are written from the surrounding text.\n\nWhere the book's prose is inaccurate, this file says so and gives the correct behaviour."
+  },
+  {
+   "id": "ch1",
+   "title": "1. What is Power BI?",
+   "md": "Power BI is Microsoft's business-intelligence and visualization tool.\n\n| Term | Meaning |\n|---|---|\n| Workspace | Shared environment where a team collaborates on reports and dashboards |\n| Dataset | Imported and transformed data used by reports |\n| Fact table | Central table of a star schema. Holds numeric, measurable facts. |\n| Dimension table | Descriptive context for facts (who, what, when, where) |\n| Report | Multi-page interactive set of visuals built on a dataset |\n| Dashboard | One-page collection of tiles (visuals or KPIs) from reports |\n| Visualization | Chart, table, map, etc. |\n| Tile | One component of a dashboard |\n| Filter / Slicer | Limit displayed data. A slicer is an on-canvas filter control. |\n| Measure | Calculation evaluated at query time, e.g. sum, average, count |\n| Calculated column | Formula evaluated per row and stored in the table. It is static and ignores report filter context. |\n| Drill-down | Move from a summary view to more detail |\n| Power Query | ETL and cleansing tool |\n| Power BI Desktop | Windows authoring app |\n| Power BI Service | Cloud service for viewing and sharing |"
+  },
+  {
+   "id": "ch2",
+   "title": "2. Power Query",
+   "md": "Power Query is an ETL tool (extract, transform, load). It is also available in Excel.\n\n- It connects to Excel, SQL, web APIs, JSON, XML, SharePoint and more.\n- It supports a no-code UI or M code (a functional language).\n- Queries are refreshable, and you can view query dependencies.\n- **UI parts:** Ribbon, Query Editor, Navigation pane, Query Settings, Preview, Formula bar, and Applied Steps. Each step is recorded and can be edited or deleted.\n\n**Workflow**\n1. Home → Transform Data opens the editor.\n2. Get Data connects to a source.\n3. Transform the data:\n   - Filter rows.\n   - Change data types.\n   - Split or merge columns.\n   - Pivot or unpivot.\n   - Group by.\n   - Add conditional columns.\n   - Rename columns.\n   - Sort.\n4. Combine sources:\n   - **Append** stacks similar tables.\n   - **Merge** joins different tables.\n5. Preview and refine.\n6. Close & Apply loads the result into the model."
+  },
+  {
+   "id": "ch3",
+   "title": "3. Data modelling",
+   "md": "- **Relationships** connect a primary key in one table to a foreign key in another.\n- **Star schema** is a fact table (e.g. Sales) plus dimension tables (Products, Customers, Date, Geography).\n- **Cardinality:** 1:1, 1:M, M:M. Avoid M:M by using a bridge table or aggregation.\n- **Cross-filter direction:** Single or Both.\n- **Role-playing dimensions:** one Date table used as Order Date and Ship Date.\n- **Calculated tables** and **hierarchies** (Year > Quarter > Month > Day).\n- **Normalization** reduces redundancy. **Denormalization** speeds up querying, and star schemas are denormalized.\n\n**Build steps**\n1. Load and clean the data.\n2. Create relationships in Model View.\n3. Design the star schema and avoid circular relationships.\n4. Add DAX columns and measures.\n5. Optimize by removing unused columns and using aggregations and hierarchies.\n\n**Best practices**\n- Use a star schema.\n- Create a proper Date table.\n- Use friendly names.\n- Avoid M:M relationships.\n- Minimize columns.\n- Validate relationships.\n\n**Example sales model**\n- Fact: `Sales(DateKey, ProductKey, CustomerKey, SalesAmount, Quantity)`.\n- Dimensions: Date, Product, Customer, each related 1:M to Sales.\n- Measures:\n\n```dax\nTotal Sales   = SUM(Sales[Sales Amount])\nAverage Sales = AVERAGE(Sales[Sales Amount])\nSales Growth % =\nVAR Prev = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))\nRETURN DIVIDE([Total Sales] - Prev, Prev)\n```\n\nThe book writes growth with `PREVIOUSYEAR(SUM(...))`. That is not valid DAX, because time-intelligence functions take a date column, so the version above uses `SAMEPERIODLASTYEAR`."
+  },
+  {
+   "id": "ch4",
+   "title": "4. DAX aggregation functions",
+   "md": "| Function | What it does | Example |\n|---|---|---|\n| `SUM(col)` | Adds a column | `Total = SUM(sales[sales_amount])` |\n| `SUMX(table, expr)` | Row-by-row expression, then sums | `SUMX(sales, sales[price]*sales[qty])` |\n| `COUNT(col)` | Counts non-blank **numeric** values | `COUNT(Sales[Revenue])` |\n| `COUNTA(col)` | Counts non-blank values of any type | `COUNTA(Customers[Phone])` |\n| `COUNTAX(table, expr)` | COUNTA over an expression per row | `COUNTAX(Sales, Sales[Product])` |\n| `COUNTBLANK(col)` | Counts blank values | `COUNTBLANK(sales[price])` |\n| `COUNTROWS(table)` | Rows in a table or table expression | `COUNTROWS(FILTER(sales, sales[price]>100))` |\n| `DISTINCTCOUNT(col)` | Distinct values, counting blank as one | `DISTINCTCOUNT(sales[product])` |\n| `DISTINCTCOUNTNOBLANK(col)` | Distinct values, excluding blank | `DISTINCTCOUNTNOBLANK(sales[price])` |\n| `MIN` / `MAX` | Smallest / largest value | `MIN(sales[price])` |\n| `MINX` / `MAXX(table, expr)` | Min / max of an expression per row | `MAXX(sales, sales[price]*sales[qty])` |\n| `MINA` / `MAXA` | Like MIN / MAX but also evaluates text and logical values | `MINA(sales[price])` |\n| `AVERAGE(col)` | Mean | `AVERAGE(students[age])` |\n| `AVERAGEX(table, expr)` | Mean of an expression per row | `AVERAGEX(sales, sales[price]/sales[qty])` |\n| `AVERAGEA(col)` | Mean that includes text and logical values | `AVERAGEA(sales[price])` |\n\nWhere the book's prose is wrong:\n- `COUNTA` counts non-blank values. It does not count blanks.\n- `MINA`, `MAXA` and `AVERAGEA` do not \"ignore blanks\" or \"include nulls\". They treat text as 0 and TRUE as 1, and skip empty cells.\n- `SUMX` takes a table and an expression, so filter first with `CALCULATE` or `FILTER`.\n\n### Date and time functions\n| Function | Purpose | Example |\n|---|---|---|\n| `CALENDAR(start, end)` | Table with one date column | `Calendar = CALENDAR(DATE(2021,1,1), DATE(2021,12,31))` |\n| `DATE(y,m,d)` | Build a date | `DATE(2022,2,14)` |\n| `DATEDIFF(d1, d2, unit)` | Difference in DAY, MONTH, YEAR, etc. | `DATEDIFF(DATE(2021,1,1), DATE(2021,12,31), DAY)` |\n| `DATEVALUE(text)` | Text to date | `DATEVALUE(sales[order_date])` |\n| `DAY` / `MONTH` / `YEAR` | Extract a component | `YEAR(sales[date])` |\n| `HOUR` / `MINUTE` | Extract a time component | `HOUR(orders[order_time])` |\n| `NOW()` / `TODAY()` | Current datetime / date | `TODAY()` |\n| `TIME(h,m,s)` | Build a time | `TIME(8,30,0)` |\n| `WEEKDAY(date, [type])` | Day of week as a number | `IF(WEEKDAY(t[date],2)<=5,\"Weekday\",\"Weekend\")` |\n\nExample calculated columns:\n```dax\nDays Since = DATEDIFF(t[date_column], TODAY(), DAY)\nStatus     = IF(tasks[due_date] < TODAY(), \"Overdue\", \"Not Overdue\")\n```"
+  },
+  {
+   "id": "ch5",
+   "title": "5. DAX filter functions",
+   "md": "| Function | Purpose |\n|---|---|\n| `FILTER(table, condition)` | Returns the rows meeting a condition. Combine conditions with `&&` and `||`. |\n| `CALCULATE(expr, filters…)` | Evaluates an expression in a modified filter context. This is the most important DAX function. |\n| `ALL(table or column)` | Removes filters |\n| `ALLEXCEPT(table, col…)` | Removes all filters except those on the listed columns |\n| `ALLSELECTED()` | Removes filters from the current visual but keeps the user's outer selections |\n| `KEEPFILTERS(filter)` | Intersects a new filter with the existing one instead of overriding it |\n| `LOOKUPVALUE(result_col, search_col, value, [alt])` | Returns a value from a column where another column matches |\n| `BLANK()` | Returns a blank |\n| `ERROR(\"msg\")` | Raises a custom error |\n\nExamples:\n```dax\nWest Sales    = SUMX(FILTER(Sales, Sales[Region] = \"West\"), Sales[SalesAmount])\nFemale AvgAge = AVERAGEX(FILTER(Customer, Customer[Gender] = \"Female\"), Customer[Age])\nCal Sales     = CALCULATE(SUM(Sales[Sales Amount]), Sales[State] = \"California\")\nQ1 2022       = CALCULATE(SUM(Sales[Sales Amount]),\n                  Sales[Date] >= DATE(2022,1,1), Sales[Date] <= DATE(2022,3,31))\nAll States    = CALCULATE(SUM(Sales[Sales Amount]), ALL(Sales[State]))\nOnly State    = CALCULATE(SUM(Sales[Sales Amount]), ALLEXCEPT(Sales, Sales[State]))\n% of Total    = DIVIDE(SUM(Sales[Sales Amount]),\n                  CALCULATE(SUM(Sales[Sales Amount]), ALLSELECTED(Sales)))\nProduct Name  = LOOKUPVALUE(Products[Name], Products[ID], \"P001\", \"Unknown\")\nSafe Divide   = IF([Denominator] = 0, ERROR(\"Division by zero\"), [Numerator]/[Denominator])\n```\n\nThe book's `ALLSELECTED` description is inverted. It keeps the user's selections and removes only the inner filters, which is why it is used for percent-of-total measures."
+  },
+  {
+   "id": "ch6",
+   "title": "6. IF and SWITCH in DAX",
+   "md": "```dax\nLevel = IF(Sales[Amount] > 1000, \"High\", \"Low\")\nSalary Band = IF(Emp[Salary] > AVERAGE(Emp[Salary]), \"Above Average\", \"Below Average\")\n\nCommission =\nSWITCH(Sales[Product],\n    \"A\", 0.05,\n    \"B\", 0.08,\n    0.03)                       -- last value is the default\n\nAge Group =\nSWITCH(TRUE(),\n    Customer[Age] < 18, \"Minor\",\n    Customer[Age] < 65, \"Adult\",\n    \"Senior\")\n```\n\n`SWITCH(TRUE(), …)` gives multi-condition logic that reads like a nested IF. This is the pattern the book's age and gender example uses.\n\nNote: in `AVERAGE(Emp[Salary])` inside a calculated column, the average is over the whole column."
+  },
+  {
+   "id": "ch7",
+   "title": "7. Data visualization",
+   "md": "**Concepts.** A *report* is multi-page. A *dashboard* is a single page of tiles. *Visuals* are the individual charts.\n\n| Category | Visuals |\n|---|---|\n| Standard | Bar/column, line, pie/donut, table/matrix, card, scatter |\n| Advanced | Treemap, waterfall, gauge, KPI |\n| Custom | AppSource visuals: bullet chart, heatmap, Sankey |\n| Maps | Map, Filled map, ArcGIS |\n| AI-driven | Key Influencers, Decomposition Tree, Smart Narratives |\n\n**Steps**\n1. Load data.\n2. Create a report.\n3. Choose a visual and drag fields into Axis, Values and Legend.\n4. Format it: titles, labels, tooltips, colors.\n5. Add interactivity: cross-filtering, slicers, drill-through, bookmarks, tooltips.\n6. Publish to the Power BI Service and share.\n\n**Best practices**\n- Pick the right chart: bar or column for comparison, line for trends, pie or treemap for composition.\n- Keep it simple and use consistent colors and fonts.\n- Highlight the key insights.\n- Enable drill-down.\n- Optimize performance by limiting data points and using aggregations.\n\n**Example sales dashboard**\n- Bar chart of sales by category.\n- Line chart of monthly trend.\n- Map of sales by country.\n- KPI of revenue vs target.\n- Slicer for year or region.\n\n**Advanced techniques:** custom tooltips, paginated reports, themes, R and Python visuals, and DAX-driven dynamic interactions.\n\n**Challenges:**\n- Choosing the right visual: follow the chart guidelines above.\n- Large datasets: aggregate or filter.\n- Slow reports: use Performance Analyzer."
+  }
+ ],
+ "sql": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "md": "Source: *Data Analysis Made Easy*, pp. 113–190. The book shows its queries as screenshots. The queries below are reconstructed from the surrounding text. They use standard SQL, with MySQL and SQL Server variants noted."
+  },
+  {
+   "id": "sample-data-used-throughout-the-book",
+   "title": "Sample data used throughout the book",
+   "md": "**Employees**\n\n| EmployeeID | FirstName | LastName | DepartmentID |\n|---|---|---|---|\n| 1 | John | Smith | 1 |\n| 2 | Sarah | Johnson | 2 |\n| 3 | Alex | Brown | NULL |\n| 4 | David | Lee | 3 |\n\n**Departments**\n\n| DepartmentID | DepartmentName |\n|---|---|\n| 1 | Sales |\n| 2 | Marketing |\n| 3 | Finance |\n| 4 | IT |"
+  },
+  {
+   "id": "ch1",
+   "title": "1. What is SQL?",
+   "md": "SQL (Structured Query Language) manages and queries relational databases.\n\n- **Database** is an organized collection of data. A **table** has **columns** (fields) and **rows** (records).\n- **Primary key** uniquely identifies a row. **Foreign key** references another table's primary key.\n- **Index** speeds up lookups.\n- **Query** is a request for data.\n- **View** is a virtual table defined by a query.\n- **Alias** is a temporary name. `SELECT column_name AS alias FROM table_name AS t;` (`AS` is optional.)"
+  },
+  {
+   "id": "ch2",
+   "title": "2. Managing databases",
+   "md": "```sql\nCREATE DATABASE sales;\nCREATE TABLE customers (\n  customer_id    INT PRIMARY KEY,\n  customer_name  VARCHAR(100),\n  customer_email VARCHAR(50)\n);\n\nALTER TABLE customers ADD customer_phone VARCHAR(20);\nALTER TABLE customers ALTER COLUMN customer_email VARCHAR(100);  -- SQL Server; MySQL: MODIFY COLUMN\n\nDROP TABLE customers;\nDROP DATABASE sales;\n```"
+  },
+  {
+   "id": "ch3",
+   "title": "3. Insert, update, delete",
+   "md": "```sql\nINSERT INTO employees (employee_id, first_name, last_name, salary)\nVALUES (1001, 'John', 'Doe', 50000);\n\nINSERT INTO employees (employee_id, first_name, last_name, salary)\nVALUES (1002, 'Jane', 'Smith', 60000),\n       (1003, 'Bob', 'Johnson', 70000),\n       (1004, 'Mary', 'Williams', 80000);   -- multi-row\n\nUPDATE employees SET salary = 60000 WHERE employee_id = 1001;\nUPDATE employees SET first_name = 'Samantha' WHERE last_name = 'Smith';\n\nDELETE FROM employees WHERE employee_id = 1001;\nDELETE FROM employees WHERE salary < 50000;\n```\n\nAlways include a `WHERE` on UPDATE and DELETE. Without one, every row is affected."
+  },
+  {
+   "id": "ch4",
+   "title": "4. Basic SELECT",
+   "md": "```sql\nSELECT FirstName, LastName FROM Employees;\nSELECT DepartmentName FROM Departments;\nSELECT FirstName, LastName FROM Employees WHERE DepartmentID = 1;   -- John Smith\nSELECT DepartmentName FROM Departments WHERE DepartmentName <> 'IT';\nSELECT * FROM Employees LIMIT 2;              -- MySQL/Postgres; SQL Server: SELECT TOP 2 *\nSELECT * FROM Employees ORDER BY FirstName;   -- ascending by default\nSELECT * FROM Departments ORDER BY DepartmentName DESC;\n```\n\nClause order: `SELECT … FROM … WHERE … GROUP BY … HAVING … ORDER BY … LIMIT`."
+  },
+  {
+   "id": "ch5",
+   "title": "5. Filtering rows",
+   "md": "```sql\nWHERE DepartmentID = 1 AND LastName = 'Smith'        -- AND: all conditions true\nWHERE DepartmentID = 1 OR LastName = 'Brown'         -- OR: at least one\nWHERE DepartmentID IS NULL                           -- NULL test: use IS NULL, never = NULL\nWHERE LastName LIKE 'S%'                             -- % = any string, _ = one character\nWHERE LastName LIKE 'B%' AND DepartmentID IS NULL    -- Alex Brown\n```\n\nNote: the book says \"last name starts with S\" returns Smith and Johnson. Johnson starts with J, so only Smith actually matches."
+  },
+  {
+   "id": "ch6",
+   "title": "6. Sorting",
+   "md": "```sql\nSELECT * FROM employees ORDER BY salary ASC;\nSELECT * FROM employees ORDER BY last_name ASC, first_name ASC;   -- multi-column\nSELECT * FROM employees ORDER BY salary DESC;\nSELECT * FROM employees ORDER BY last_name DESC, first_name DESC;\n```"
+  },
+  {
+   "id": "ch7",
+   "title": "7. Joins",
+   "md": "| Join | Returns |\n|---|---|\n| `INNER JOIN` | Only rows with a match in both tables |\n| `LEFT JOIN` | All left rows plus matches. Non-matches get NULLs. |\n| `RIGHT JOIN` | All right rows plus matches |\n| `FULL OUTER JOIN` | All rows from both sides |\n\n```sql\nSELECT e.FirstName, e.LastName, d.DepartmentName\nFROM Employees e\nINNER JOIN Departments d ON e.DepartmentID = d.DepartmentID;\n```\n- **INNER:** John/Sales, Sarah/Marketing, David/Finance. Alex has no department and IT has no employee, so both are dropped.\n- **LEFT (Employees first):** the INNER rows plus Alex Brown with a NULL department.\n- **LEFT (Departments first):** all four departments, and IT shows NULL employee columns.\n- **RIGHT:** every department appears, and IT is listed with NULLs.\n- **FULL OUTER:** Alex/NULL and IT/NULL both appear.\n\nYou can join on multiple columns with `ON a.x = b.x AND a.y = b.y`."
+  },
+  {
+   "id": "ch8",
+   "title": "8. Aggregation",
+   "md": "Sample **Orders** (5 rows totalling 1000.00) and **Customers** (John Smith/New York, Sarah Johnson/London, Alex Brown/Paris).\n\n```sql\nSELECT SUM(TotalAmount) AS Total, COUNT(*) AS NumOrders FROM Orders;   -- 1000.00, 5\nSELECT AVG(TotalAmount) AS AvgTotal FROM Orders;                        -- 200.00\n\nSELECT c.CustomerName, SUM(o.TotalAmount) AS TotalAmount\nFROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID\nGROUP BY c.CustomerName;                       -- John 350, Sarah 350, Alex 300\n\nSELECT country, SUM(revenue) FROM customer GROUP BY country;\n\nSELECT country, AVG(order_value) AS avg_order_value\nFROM customer GROUP BY country\nHAVING AVG(order_value) > 50;\n```\n\n- `WHERE` filters rows **before** grouping.\n- `HAVING` filters groups **after** aggregation.\n- Most databases do not allow the alias in HAVING, so repeat the expression, as above."
+  },
+  {
+   "id": "ch9",
+   "title": "9. Combining and modifying data",
+   "md": "```sql\nSELECT * FROM Employees UNION     SELECT * FROM MoreEmployees;   -- removes duplicates\nSELECT * FROM Employees UNION ALL SELECT * FROM MoreEmployees;   -- keeps duplicates (faster)\n\nSELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;\nSELECT CONCAT(FirstName, ' ', IFNULL(MiddleName,''), ' ', LastName) FROM Employees; -- MySQL; SQL Server: ISNULL\n\nSELECT SUBSTRING(FirstName, 1, 3) AS Initials FROM Employees;              -- Joh, Sar, Ale, Dav\nSELECT SUBSTRING(LastName, LEN(LastName)-1, 2) AS LastTwoChars FROM Employees;  -- th, on, wn, ee\n```\n\nNote: the book's first-example table happens to have no duplicates, so UNION and UNION ALL look identical there."
+  },
+  {
+   "id": "ch10",
+   "title": "10. Subqueries",
+   "md": "A subquery is a query nested inside another query.\n\n```sql\nSELECT * FROM orders\nWHERE customer_id IN (SELECT customer_id FROM customers WHERE state = 'CA');\n\nSELECT * FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);\n```"
+  },
+  {
+   "id": "ch11",
+   "title": "11. String manipulation",
+   "md": "```sql\nSELECT UPPER(FirstName) AS UppercaseName FROM Employees;\nSELECT LOWER(DepartmentName) AS LowercaseName FROM Departments;\nSELECT TRIM(LastName) AS TrimmedName FROM Employees;\nSELECT UPPER(LOWER(FirstName)) AS Name FROM Employees;               -- functions can be nested\nSELECT FirstName, TRIM(LastName) AS TrimmedName FROM Employees WHERE LastName LIKE '%o%';\n```"
+  },
+  {
+   "id": "ch12",
+   "title": "12. Numeric manipulation",
+   "md": "```sql\nSELECT ABS(value) FROM numbers;                       -- absolute value\nSELECT SUM(ABS(amount)) FROM transactions;\nSELECT ROUND(amount, 2) FROM sales;                   -- 2 decimal places\nSELECT ROUND(celsius * 9/5 + 32, 0) AS fahrenheit FROM temperature;\nSELECT MOD(dividend, divisor) FROM numbers;           -- remainder (or dividend % divisor)\n```"
+  },
+  {
+   "id": "ch13",
+   "title": "13. Date and time",
+   "md": "```sql\nSELECT DATEADD(day, 30, order_date)   AS new_date FROM orders;    -- SQL Server syntax\nSELECT DATEADD(month, 3, order_date)  AS new_date FROM orders;\nSELECT DATEDIFF(day,   order_date, delivery_date) AS days_to_delivery   FROM orders;\nSELECT DATEDIFF(month, order_date, delivery_date) AS months_to_delivery FROM orders;\nSELECT DATEPART(year, order_date) AS order_year FROM orders;\n```\n\nMySQL uses `DATE_ADD(order_date, INTERVAL 30 DAY)` and `EXTRACT(YEAR FROM order_date)`."
+  },
+  {
+   "id": "ch14",
+   "title": "14. Conditional logic",
+   "md": "SQL's SWITCH equivalent is `CASE`.\n\n```sql\nSELECT customer_name, total_purchase_amount,\n  CASE WHEN total_purchase_amount >= 1000 THEN 'Platinum'\n       WHEN total_purchase_amount >= 500  THEN 'Gold'\n       ELSE 'Regular' END AS customer_type\nFROM customers;\n\nSELECT employee_id, first_name, last_name, salary,\n  CASE WHEN salary < 50000 THEN 'Low'\n       WHEN salary < 80000 THEN 'Medium'\n       ELSE 'High' END AS 'Salary Range'\nFROM employees;\n```\n\nThe `IF` statement is T-SQL style (SQL Server) and runs a block conditionally. This is the book's code:\n```sql\nIF (SELECT age FROM employees WHERE id = 1000) < 30\nBEGIN\n    UPDATE employees SET salary = salary * 1.1 WHERE id = 1000\nEND\nELSE\nBEGIN\n    UPDATE employees SET salary = salary * 1.05 WHERE id = 1000\nEND\n\nIF (SELECT total_amount FROM orders WHERE id = 100) > 1000\nBEGIN\n    PRINT 'You have a discount of 10%'\nEND\n```"
+  },
+  {
+   "id": "ch15",
+   "title": "15. Combining queries (set operators)",
+   "md": "Both queries must have the same number of columns with compatible types.\n\n| Operator | Result |\n|---|---|\n| `UNION` | Combined distinct rows |\n| `INTERSECT` | Rows in both results |\n| `EXCEPT` | Rows in the first result and not the second (`MINUS` in Oracle) |\n\n```sql\nSELECT name, age, gender FROM students1 UNION     SELECT name, age, gender FROM students2;\nSELECT title, author, year FROM books1  INTERSECT SELECT title, author, year FROM books2;\nSELECT first_name, last_name, department FROM employees\nEXCEPT\nSELECT first_name, last_name, department FROM managers;\n```"
+  },
+  {
+   "id": "ch16",
+   "title": "16. Views",
+   "md": "```sql\nCREATE VIEW customer_info AS\nSELECT customer_id, first_name, last_name, email, phone FROM customers;\n\nSELECT * FROM customer_info WHERE email LIKE '%gmail.com';\n\nALTER VIEW customer_info AS                     -- MySQL: CREATE OR REPLACE VIEW\nSELECT c.customer_id, c.first_name, c.last_name, c.email, c.phone, a.address\nFROM customers c INNER JOIN addresses a ON c.customer_id = a.customer_id;\n\nDROP VIEW customer_info;\n```\n\nUses: simplify complex queries and restrict which columns users can see (security)."
+  },
+  {
+   "id": "ch17",
+   "title": "17. Normalization",
+   "md": "The goal is less redundancy and better integrity.\n\n| Form | Rule |\n|---|---|\n| **1NF** | Every column holds atomic (indivisible) values. There are no repeating groups. |\n| **2NF** | 1NF, plus every non-key column depends on the whole primary key. |\n| **3NF** | 2NF, plus no transitive dependencies (a non-key column depending on another non-key column). |\n\nThe book's worked example (page 196–197 screenshots) starts from `employees(employee_id, first_name, last_name, address, city, state, zip_code, phone_number, department_id, salary)`. It splits this into three parts:\n- Separate `address` and `phone` tables.\n- A `departments` table.\n- A `zip_codes` table, because state depends on zip code.\n\nThe book's wording on 1NF is loose: 1NF means splitting multi-valued or composite data, not storing every phone digit in its own column.\n\n\n### Normalization: the book's actual DDL\n\n```sql\nCREATE TABLE employees (\n  employee_id INT PRIMARY KEY, first_name VARCHAR(50), last_name VARCHAR(50),\n  department_id INT, salary DECIMAL(10,2));\n\nCREATE TABLE addresses (\n  address_id INT PRIMARY KEY, employee_id INT, address VARCHAR(100),\n  city VARCHAR(50), state VARCHAR(50), zip_code VARCHAR(10),\n  FOREIGN KEY (employee_id) REFERENCES employees(employee_id));\n\nCREATE TABLE phone_numbers (\n  phone_number_id INT PRIMARY KEY, employee_id INT, phone_number VARCHAR(20),\n  FOREIGN KEY (employee_id) REFERENCES employees(employee_id));\n\nCREATE TABLE departments (department_id INT PRIMARY KEY, department_name VARCHAR(50));\nALTER TABLE employees ADD FOREIGN KEY (department_id) REFERENCES departments(department_id);\n\nCREATE TABLE zip_codes (zip_code VARCHAR(10) PRIMARY KEY, state VARCHAR(50), city VARCHAR(50));\nALTER TABLE addresses ADD FOREIGN KEY (zip_code) REFERENCES zip_codes(zip_code);\n```"
+  },
+  {
+   "id": "dialect-note-from-the-screenshots",
+   "title": "Dialect note (from the screenshots)",
+   "md": "The book's code is mostly **T-SQL (SQL Server)**: `DATEADD(day, 30, d)`, `DATEDIFF(day, a, b)`, `DATEPART`, `LEN`, `IF … BEGIN … END`, `PRINT`. It also uses MySQL/PostgreSQL forms in places (`LIMIT`, `IFNULL`, alias in `HAVING`). The in-browser SQL playground runs SQLite, so the lessons give an SQLite equivalent next to each T-SQL form."
+  }
+ ],
+ "python": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "md": "Source: *Data Analysis Made Easy*, pp. 191–245. The book shows its code as screenshots. The code below is reconstructed from the surrounding text.\n\nThe table of contents lists 17 Python chapters. The body contains 15 (introduction through Seaborn). Data Science, Scikit-Learn machine learning and Web Scraping are listed but not included in the PDF. The Data Science section is covered separately in `05-data-science.md`."
+  },
+  {
+   "id": "ch1",
+   "title": "1. Key terms",
+   "md": "- **Variable:** a name that refers to a value.\n- **Data types:** int, float, str, bool, list, tuple, set, dict.\n- **Operators:** symbols for arithmetic, comparison and logic.\n- **Function:** a reusable block of code, defined with `def`.\n- **Control structures:** if/else and loops.\n- **Module:** a `.py` file you can import.\n- **Package:** a collection of modules, installed with `pip`.\n- **Class and object:** a blueprint, and an instance of it.\n- **Exception handling:** `try` / `except`.\n- **Iterators and generators:** lazy, memory-friendly sequences."
+  },
+  {
+   "id": "ch2",
+   "title": "2. Variables",
+   "md": "```python\nx = 5\nx = 10; x = 20          # can be reassigned\nprint(x)                # 20   (# starts a comment)\n```\n\nNaming rules:\n- Letters, digits and underscores only.\n- Must not start with a digit.\n- Case-sensitive.\n- Cannot be a keyword such as `if`, `else` or `while`.\n\nValid: `my_var`, `_x`, `name2`. Invalid: `2name`, `my-var`, `class`.\n\nCommon types: integer (`5`), float (`3.14`), string (`\"Hello\"`), boolean (`True`)."
+  },
+  {
+   "id": "ch3",
+   "title": "3. Data types",
+   "md": "```python\ni = 42                       # int\nf = 3.14                     # float\nb = True                     # bool\ns = \"Python\"                 # str (single or double quotes)\nlst = [1, \"a\", 3.5]          # list: ordered, mutable, mixed types\ntup = (1, 2, 3)              # tuple: ordered, immutable\nst = {1, 2, 3}               # set: unordered, unique items\nd = {\"name\": \"John\", \"age\": 30}   # dict: key-value pairs\n```\n\nOthers include complex numbers and bytes."
+  },
+  {
+   "id": "ch4",
+   "title": "4. List comprehension",
+   "md": "Syntax: `[expression for item in iterable if condition]`\n\n```python\nmy_list = [1, 2, 3, 4, 5]\nsquares = [num ** 2 for num in my_list]          # [1, 4, 9, 16, 25]\nevens   = [num for num in my_list if num % 2 == 0]   # [2, 4]\n```"
+  },
+  {
+   "id": "ch5",
+   "title": "5. Operators",
+   "md": "| Type | Operators |\n|---|---|\n| Arithmetic | `+ - * / // % **` |\n| Comparison | `== != > < >= <=` |\n| Logical | `and or not` |\n| Assignment | `= += -= *= /= //= %= **=` |\n| Bitwise | `& \\| ^ ~ << >>` |\n| Membership | `in`, `not in` |"
+  },
+  {
+   "id": "ch6",
+   "title": "6. Control structures",
+   "md": "```python\nage = 18\nif age >= 18:\n    print(\"You are eligible to vote!\")\nelif age == 17:\n    print(\"You can vote next year!\")\nelse:\n    print(\"You are not old enough to vote yet.\")\n\nfor fruit in [\"apple\", \"banana\", \"cherry\"]:\n    print(fruit)\n\ni = 0\nwhile i < 5:\n    print(i); i += 1\n```"
+  },
+  {
+   "id": "ch7",
+   "title": "7. Transfer statements and exceptions",
+   "md": "```python\nfor i in range(10):\n    if i == 5: break        # exits the loop -> prints 0..4\n    print(i)\n\nfor i in range(10):\n    if i == 5: continue     # skips iteration -> prints 0-4, 6-9\n    print(i)\n\ndef add(a, b):\n    return a + b            # ends the function, hands back a value\nresult = add(2, 3)          # 5\n\ntry:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print(\"Cannot divide by zero\")\n```"
+  },
+  {
+   "id": "ch8",
+   "title": "8. Functions and classes",
+   "md": "```python\ndef greet(name=\"Anonymous\"):        # default parameter\n    \"\"\"Docstring: describes the function.\"\"\"\n    print(\"Hello,\", name)\n\ndef calculate(num1, num2):          # multiple return values (a tuple)\n    return num1 + num2, num1 * num2\nresult1, result2 = calculate(3, 4)\n\nclass Person:\n    def __init__(self, name, age):  # constructor; self = the new object\n        self.name, self.age = name, age\n    def get_name(self): return self.name\n    def get_age(self):  return self.age\n    def set_name(self, name): self.name = name\n    def set_age(self, age):   self.age = age\n\nperson1 = Person(\"Alice\", 30)\nperson1.set_age(31)\n```"
+  },
+  {
+   "id": "ch9",
+   "title": "9. Regular expressions (`re` module)",
+   "md": "| Function | Purpose |\n|---|---|\n| `re.search(p, s)` | First match anywhere in the string |\n| `re.match(p, s)` | Match at the start of the string only |\n| `re.findall(p, s)` | List of all non-overlapping matches |\n| `re.sub(p, repl, s)` | Replace matches |\n\nSyntax:\n\n| Token | Meaning |\n|---|---|\n| `.` | Any single character except a newline |\n| `*` | Zero or more of the previous |\n| `+` | One or more of the previous |\n| `?` | Zero or one of the previous |\n| `[]` | Any one character in the set |\n| `\\|` | Either pattern |\n| `()` | Group |\n| `^` | Start of the string |\n\n```python\nimport re\ns = \"The quick brown fox jumps over the lazy dog\"\nre.search(\"quick\", s).group()    # 'quick'\nre.match(\"^The\", s)              # match object\nre.findall(\"o\", s)               # ['o','o','o','o']\nre.sub(\"brown\", \"red\", s)\n```"
+  },
+  {
+   "id": "ch10",
+   "title": "10. NumPy",
+   "md": "- NumPy is \"Numerical Python\". Its key features are:\n  - The N-dimensional array (`ndarray`).\n  - **Broadcasting**: operating on arrays of different shapes.\n  - **Vectorized computation**: whole-array operations, much faster than Python loops.\n- A 1-D array is a vector and a 2-D array is a matrix. All elements share one dtype.\n\n```python\nimport numpy as np\na = np.array([1, 2, 3, 4])\na[0]                 # indexing\na + a, a * 2         # element-wise\nnp.sqrt(a)           # vectorized function\n```"
+  },
+  {
+   "id": "ch11",
+   "title": "11. Pandas",
+   "md": "- **Series** is a 1-D labelled array.\n- **DataFrame** is a 2-D table where each column is a Series.\n- Operations:\n  - Filtering with boolean masks.\n  - `groupby` plus aggregation (sum, mean, count, min, max, std).\n  - Merging with inner, outer, left and right joins.\n  - Reshaping with `melt` (wide to long) and `pivot` (long to wide).\n\n**Loading data**\n```python\nimport pandas as pd\ndf = pd.read_csv(\"data.csv\")            # delimiter, header, encoding options\ndf = pd.read_excel(\"data.xlsx\", sheet_name=\"Sheet1\")\ndf = pd.read_json(\"data.json\")          # orient, lines options\ndf = pd.read_sql(\"SELECT * FROM t\", conn)\ntables = pd.read_html(url)              # list of DataFrames\n```"
+  },
+  {
+   "id": "ch12",
+   "title": "12. Data cleaning and preparation",
+   "md": "```python\ndf.dropna(inplace=True)                                     # drop rows with missing values\ndf[\"col\"].fillna(df[\"col\"].mean(), inplace=True)            # fill with the mean\ndf.drop_duplicates(inplace=True)\ndf[\"age\"]  = df[\"age\"].astype(int)\ndf[\"date\"] = pd.to_datetime(df[\"date\"])\n```\n\nNewer pandas versions discourage `inplace=True` on a column. Use `df[\"col\"] = df[\"col\"].fillna(...)` instead."
+  },
+  {
+   "id": "ch13",
+   "title": "13. Joining DataFrames",
+   "md": "```python\nmerged = pd.merge(df1, df2, on=\"key\", how=\"inner\")   # only matching keys (e.g. B, D)\nmerged = pd.merge(df1, df2, on=\"key\", how=\"left\")    # all of df1, NaN where no match\nmerged = pd.merge(df1, df2, on=\"key\", how=\"right\")   # all of df2\nmerged = pd.merge(df1, df2, on=\"DepartmentID\", how=\"outer\")  # everything, NaN gaps\ncombined = pd.concat([df1, df2], axis=0, ignore_index=True)  # stack rows (axis=1 = side by side)\n```"
+  },
+  {
+   "id": "ch14",
+   "title": "14. Plotting with pandas",
+   "md": "Uses `df.plot(kind=...)`. The example DataFrame has 100 points: `x = np.linspace(0, 10, 100)`, `y = np.sin(x)`.\n\n```python\ndf.plot(x=\"x\", y=\"y\", kind=\"line\")\ndf.plot(x=\"x\", y=\"y\", kind=\"bar\")\ndf.plot(x=\"x\", y=\"y\", kind=\"scatter\")\ndf[\"y\"].plot(kind=\"hist\")\n```"
+  },
+  {
+   "id": "ch15",
+   "title": "15. Matplotlib and Seaborn",
+   "md": "```python\nimport numpy as np, matplotlib.pyplot as plt\nx = np.linspace(0, 10, 100)\nplt.plot(x, np.sin(x)); plt.title(\"Sine\"); plt.xlabel(\"x\"); plt.ylabel(\"sin(x)\"); plt.show()\n\nfig, (ax1, ax2) = plt.subplots(2, 1)       # subplots\nax1.plot(x, np.sin(x)); ax2.plot(x, np.cos(x))\n\nplt.bar([\"A\", \"B\", \"C\"], [10, 20, 15])     # bar chart\n\nimport seaborn as sns                       # pip install seaborn\ntips = sns.load_dataset(\"tips\")\nsns.scatterplot(data=tips, x=\"total_bill\", y=\"tip\")          # positive relationship\nsns.lineplot(data=sns.load_dataset(\"flights\"), x=\"year\", y=\"passengers\")   # rising trend\nsns.barplot(data=tips, x=\"day\", y=\"total_bill\")              # mean bill per day\nplt.show()\n```"
+  }
+ ],
+ "ds": [
+  {
+   "id": "overview",
+   "title": "Overview",
+   "md": "Source: *Data Analysis Made Easy*, pp. 246–254."
+  },
+  {
+   "id": "ch1",
+   "title": "1. Introduction to data science",
+   "md": "Data science is an interdisciplinary field. It extracts insight from data using statistics, mathematics, computing and domain expertise.\n\n| # | Component | Key points | Tools |\n|---|---|---|---|\n| 1 | Data collection | Gather raw data from databases, APIs, web scraping, sensors, logs and surveys | SQL, `requests`, BeautifulSoup, Selenium, ETL tools |\n| 2 | Data cleaning | Handle missing values (`fillna`, `dropna`), remove duplicates, detect outliers (boxplots, z-scores), standardize formats | Pandas |\n| 3 | Exploratory data analysis | Descriptive stats (mean, median, mode, variance), visualization, correlation | Matplotlib, Seaborn, Pandas, Excel |\n| 4 | Feature engineering | Extraction, transformation (log scaling, normalization), encoding (one-hot, label), feature selection | Scikit-learn, Pandas |\n| 5 | Statistical analysis | Distributions (Normal, Binomial, Poisson), hypothesis tests (t-test, chi-square), ANOVA, regression | — |\n| 6 | Data visualization | Line, bar, pie, scatter, heatmap, treemap, word cloud | Matplotlib, Seaborn, Plotly, Tableau, Power BI |\n| 7 | Machine learning | See below | Scikit-learn, TensorFlow, PyTorch |\n| 8 | Deep learning | Multi-layer neural networks: CNNs for images, RNNs for sequences. Used for image recognition, NLP and autonomous vehicles. | TensorFlow, Keras, PyTorch |\n| 9 | Big data | Datasets too large for traditional tools. Distributed computing and batch or real-time processing. | Hadoop, Spark |\n| 10 | NLP | Tokenization, lemmatization, stemming, sentiment analysis, named-entity recognition, language models (BERT, GPT) | NLTK, spaCy, Transformers |\n| 11 | Model evaluation | See below | — |\n| 12 | Deployment | Serialize models (pickle, joblib), expose APIs (Flask, FastAPI), monitor and update | — |\n| 13 | Domain knowledge | Finance, healthcare, marketing, e-commerce. It makes the results relevant. | — |\n| 14 | Soft skills | Communication, collaboration with engineers and analysts, problem-solving, critical thinking | — |\n\n**Machine-learning types**\n- **Supervised** learns from labeled data. It covers regression and classification. Algorithms: linear regression, decision trees, random forests, SVM, neural networks.\n- **Unsupervised** finds patterns in unlabeled data. It covers clustering and dimensionality reduction. Algorithms: K-Means, PCA, autoencoders.\n- **Reinforcement** learns by interacting with an environment and getting feedback. Examples: game AI, robotics.\n\n**Model evaluation**\n- Classification metrics: accuracy, precision, recall, F1, ROC-AUC.\n- Regression metrics: RMSE, MAE, R².\n- Techniques: cross-validation, and hyperparameter tuning with grid search or random search."
+  },
+  {
+   "id": "ch2",
+   "title": "2. Data science workflow",
+   "md": "1. **Define the problem.** Understand the business question.\n2. **Collect data** from internal or external sources.\n3. **Explore and prepare data.** Clean and preprocess.\n4. **Build models** with statistical or ML techniques.\n5. **Evaluate models** and refine them.\n6. **Communicate insights** through visuals and reports.\n7. **Deploy and monitor** in production."
+  },
+  {
+   "id": "ch3",
+   "title": "3. Tools and technologies",
+   "md": "- **Languages:** Python, R, SQL.\n- **Libraries:** NumPy, Pandas, Matplotlib, Scikit-learn, TensorFlow, PyTorch.\n- **Visualization:** Power BI, Tableau, Plotly.\n- **Big data:** Hadoop, Spark.\n- **Cloud:** AWS, Google Cloud, Microsoft Azure.\n\n**Applications**\n\n| Field | Uses |\n|---|---|\n| Business intelligence | Sales forecasting, customer segmentation |\n| Healthcare | Disease prediction, treatment optimization |\n| Finance | Fraud detection, credit scoring |\n| Marketing | Campaign optimization, customer lifetime value |\n| E-commerce | Recommendations, dynamic pricing |\n| Social media | Sentiment analysis, trend detection |"
+  },
+  {
+   "id": "ch4",
+   "title": "4. Challenges",
+   "md": "1. **Data quality:** incomplete or noisy data.\n2. **Scalability:** handling large datasets efficiently.\n3. **Interpretability:** explaining complex models to non-technical stakeholders.\n4. **Ethics:** privacy and algorithmic bias."
+  },
+  {
+   "id": "roadmap-to-learn-data-science",
+   "title": "Roadmap to learn data science",
+   "md": "1. Master programming fundamentals (Python, SQL).\n2. Learn data manipulation (Pandas, NumPy).\n3. Study statistics and ML concepts.\n4. Practice EDA and visualization.\n5. Explore advanced topics (NLP, deep learning).\n6. Build real projects.\n7. Build a portfolio and seek internships or certifications."
+  }
+ ]
+}

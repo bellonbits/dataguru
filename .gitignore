@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env*
+# The source book is third-party copyrighted material: keep it out of the repo.
+*.pdf

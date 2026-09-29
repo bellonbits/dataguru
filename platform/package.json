@@ -1,0 +1,31 @@
+{
+  "name": "data-guru",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "notes": "node tools/build-notes.mjs",
+    "test:dax": "node tools/test-dax.mjs"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "hyperformula": "^2.7.1",
+    "lucide-react": "^0.400.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.24.1",
+    "rehype-highlight": "^7.0.0",
+    "remark-gfm": "^4.0.0",
+    "sql.js": "^1.10.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "playwright-core": "^1.47.0",
+    "pyodide": "^0.26.4",
+    "vite": "^5.4.0"
+  }
+}
