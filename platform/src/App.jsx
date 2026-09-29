@@ -26,7 +26,7 @@ export default function App() {
   useEffect(() => { setMenu(false); window.scrollTo(0, 0); document.getElementById('content')?.scrollTo?.(0, 0); }, [loc.pathname]);
   return (
     <div className="frame">
-      <a className="skip" href="#content">Skip to content</a>
+      <a className="skip" href="#content" onClick={e => { e.preventDefault(); document.getElementById('content')?.focus(); }}>Skip to content</a>
       <Sidebar open={menu} onNavigate={() => setMenu(false)} />
       {menu && <div className="scrim" onClick={() => setMenu(false)} />}
       <div className="workspace">

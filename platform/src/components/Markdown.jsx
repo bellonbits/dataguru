@@ -36,7 +36,11 @@ export default function Markdown({ md, course, chapterKey }) {
           const raw = text(codeEl ? codeEl.props.children : '').replace(/\n$/, '');
           return <CodeBlock lang={lang} code={raw} course={course} chapterKey={chapterKey}>{codeEl ? codeEl.props.children : ''}</CodeBlock>;
         },
-        a({ href, children }) { return /^https?:/.test(href || '') ? <a href={href} target="_blank" rel="noreferrer noopener">{children}</a> : <a href={href}>{children}</a>; },
+        a({ href = '', children }) {
+          if (/^https?:/.test(href)) return <a href={href} target="_blank" rel="noreferrer noopener">{children}</a>;
+          if (href.startsWith('#')) return <a href={href} onClick={e => { e.preventDefault(); document.getElementById(href.slice(1))?.scrollIntoView({ behavior: 'smooth' }); }}>{children}</a>; // never change the hash route
+          return <a href={href}>{children}</a>;
+        },
       }}>{md}</ReactMarkdown>
   );
 }
